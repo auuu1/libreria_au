@@ -26,8 +26,9 @@
         </button>
     </form>
 
-      @if(auth()->user()->is_admin)
-        <a href="{{ route('admin-dashboard')}}" class="btn btn-secondary">
+  @if(auth()->user()->is_admin)
+        <a href="{{ route('admin-dashboard') }}" class="btn btn-secondary ms-2 mb-3">
+            <i class="fa-solid fa-screwdriver-wrench"></i> 
             Panel Admin
         </a>
     @endif
