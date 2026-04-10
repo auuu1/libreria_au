@@ -68,14 +68,15 @@
                             </button>
                         </a>
 
+                        @if(auth()->user()->is_admin)
                         <form action="{{ route('mensajeEmergencia.destroy', $mensaje->id) }}" method="POST" class="d-inline">
                             @csrf
                             @method('DELETE')
-
                             <button class="btn btn-danger" onclick="return confirm('¿Desea eliminar este mensaje de emergencia?')">
                                 <i class="fa-solid fa-trash"></i>
                             </button>
                         </form>
+                    @endif
                     </td>
                 </tr>
             @endforeach

@@ -25,7 +25,7 @@ class User extends Authenticatable
     ];
 
     //Casting del valor booleano para administrador
-    protected $cast = [
+    protected $casts = [
         'is_admin' => 'boolean',
     ];
 

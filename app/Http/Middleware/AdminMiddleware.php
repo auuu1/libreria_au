@@ -9,24 +9,18 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminMiddleware
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
     public function handle(Request $request, Closure $next): Response
     {
-        //verificar si la sesion es activa
-        if(Auth::check()){
-            return redirect()->route('registro')
-            ->with('error','Se debe reggistrar e iniciar sesion');
+        // si no hay sesión activa, redirigir al login
+        if (!Auth::check()) {
+            return redirect()->route('acceso')
+                ->with('error', 'Debes iniciar sesión');
         }
 
-        //verificar si el usuario es administrador 
-        if(!Auth::user()->is_admin){
+        // si hay sesión pero no es admin, redirigir a mensajes
+        if (!Auth::user()->is_admin) {
             return redirect()->route('mensajeEmergencia.index')
-            ->with('error','No cuentas con permisos de administrador');
-
+                ->with('error', 'No cuentas con permisos de administrador');
         }
 
         return $next($request);

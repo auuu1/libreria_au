@@ -17,25 +17,29 @@ class AuthController extends Controller
 
     //metodo para guardar la informacion en la base de datos
     public function register(Request $request){
-        $request->validate([
-       // 'name' => 'required',
-       // 'email' => 'required|email|unique:users',
-       // 'password' => 'required|confirmed|min:8',
+        $validator = \Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:8',
         ]);
+
+        if($validator->fails()){
+            return back()->with('error', 'El correo ya está registrado o los datos son incorrectos.');
+        }   
 
         $user = User::create([
-
-        'name' => $request->name,
-        'email' => $request->email,
-        'password' => Hash::make($request->password),
-        'is_admin' => $request -> has('is_admin'),
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'is_admin' => $request->has('is_admin'),
         ]);
 
-        //iniciar sesion de forma automatica
         Auth::login($user);
 
         return redirect()->route('mensajeEmergencia.index');
     }
+
+
     //metodo para regresar vista de inicio de sesion
     public function loginForm(){
         return view('auth.login');
@@ -60,9 +64,7 @@ class AuthController extends Controller
             return redirect()->route('mensajeEmergencia.index');
         }
 
-        return back()->withErrors([
-            'email' => 'Datos incorrectos',
-        ]);
+       return back()->with('warning', 'Correo o contraseña incorrectos');
 
     }
 
@@ -79,8 +81,10 @@ class AuthController extends Controller
     }
 
 
-        public function adminDashboard(){
-        return view('admin-dashboard');
+    public function adminDashboard(){
+        $usuarios = \App\Models\User::all();
+        return view('admin.dashboard', compact('usuarios'));
     }
+
 
 }

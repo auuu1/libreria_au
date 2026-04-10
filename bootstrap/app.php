@@ -11,10 +11,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //registro de los middlewares globales
-        $middleware-> alias([
-            //registrar alias y asignar su ruta
-            'auth' => App\Http\Middleware\VerificaUsuario::class,
+        $middleware->alias([
+            'verifica' => App\Http\Middleware\VerificaUsuario::class,
             'admin' => App\Http\Middleware\AdminMiddleware::class,
         ]);
     })

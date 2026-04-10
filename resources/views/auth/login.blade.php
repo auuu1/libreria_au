@@ -11,6 +11,8 @@
     @section('content')
 
     <h1>Inicio De Sesion WALL-E</h1>
+
+    @include('partials.alerts')
     
     <form action="{{ route('acceso.store') }}" method="POST">
 
@@ -18,7 +20,7 @@
 
     <input type="text" name="email" placeholder="Correo Electronico" class="form-control">
     <br>
-    <input type="text" name="password" placeholder="Contraseña" class="form-control">
+    <input type="password" name="password" placeholder="Contraseña" class="form-control">
     <br>
 
     <button type="submit" class="btn btn-primary">Iniciar Sesion</button>

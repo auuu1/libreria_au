@@ -29,6 +29,16 @@ class MensajeEmergenciaController extends Controller
   
 public function store(Request $request)
 {
+    $request->validate([
+        'tipo_emergencia'       => 'required',
+        'servicio_destinatario' => 'required',
+        'medio_envio'           => 'required',
+        'contenido'             => 'required',
+        'ubicacion'             => 'required',
+        'fecha_envio'           => 'required',
+        'estado_envio'          => 'required',
+    ]);
+
     try {
         MensajeEmergencia::create([
             'tipo_emergencia'       => $request->tipo_emergencia,
@@ -41,10 +51,10 @@ public function store(Request $request)
         ]);
 
         return redirect()->route('mensajeEmergencia.index')
-                         ->with('exito', '¡Emergencia registrada correctamente!');
+            ->with('success', '¡Emergencia registrada correctamente!');
 
     } catch (\Exception $e) {
-        return back()->with('error', 'No se pudo guardar el mensaje');
+        return back()->with('error', 'Ocurrió un error al registrar la emergencia');
     }
 }
 
