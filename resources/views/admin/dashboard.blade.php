@@ -59,6 +59,12 @@
                                 <i class="fa-solid fa-trash"></i>
                             </button>
                         </form>
+
+                        <a href="{{ route('usuarios.bienvenida', $usuario->id) }}">
+                            <button class="btn btn-success">
+                                <i class="fa-solid fa-envelope"></i>
+                            </button>
+                        </a>
                     </td>
                 </tr>
             @endforeach

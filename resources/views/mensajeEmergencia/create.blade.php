@@ -15,10 +15,10 @@
         
         <h2 class="mb-4">Registrar Mensaje de Emergencia</h2>
 
-        @if(session('exito'))
+        @if(session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <i class="fa-solid fa-circle-check me-2"></i>
-                <strong>Hecho:</strong> {{ session('exito') }}
+                <strong>Hecho:</strong> {{ session('success') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif

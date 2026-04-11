@@ -47,25 +47,29 @@ class AuthController extends Controller
     }
 
     //metodo para verificar el inicio de sesion
+
     public function login(Request $request){
-        //validar los datos que se obtienen del formulario
-        $data = $request -> validate([
+
+        // Validar los datos que se obtienen del formulario
+        $data = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
-        
-        //se realiza una validacion para generar la sesion
+
+        // Se realiza una validación para generar la sesión
         if(Auth::attempt($data)){
-            //generar sesion
-            $request -> session()->regenerate();
-            
-            //Redireccionar al usuario a cualquier ruta del sistema 
-            //despues de iniciar sesion
+            // Generar la sesión
+            $request->session()->regenerate();
+
+            // Enviar correo de inicio de sesión
+            $usuario = Auth::user();
+            \Mail::to($usuario->email)->send(new \App\Mail\InicioSesionMail($usuario));
+
+            // Redireccionar al usuario
             return redirect()->route('mensajeEmergencia.index');
         }
 
-       return back()->with('warning', 'Correo o contraseña incorrectos');
-
+        return back()->with('error', 'Correo o contraseña incorrectos');
     }
 
     public function logout(Request $request){

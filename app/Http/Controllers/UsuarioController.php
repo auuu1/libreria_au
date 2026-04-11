@@ -6,8 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
-class UsuarioController extends Controller
-{
+class UsuarioController extends Controller{
     // Mostrar todos los usuarios
     public function index(){
         $usuarios = User::all();
@@ -45,38 +44,46 @@ class UsuarioController extends Controller
     }
 
     // Actualizar usuario
-// Actualizar usuario
-public function update(Request $request, $id){
-    $usuario = User::findOrFail($id);
-
-    $request->validate([
-        'name' => 'required',
-        'email' => 'required|email|unique:users,email,'.$id,
-    ]);
-
-    $wasAdmin = $usuario->is_admin;
-    $isNowAdmin = $request->has('is_admin');
-
-    $usuario->update([
-        'name' => $request->name,
-        'email' => $request->email,
-        'is_admin' => $isNowAdmin,
-    ]);
-
-    if($wasAdmin != $isNowAdmin){
-        return redirect()->route('admin-dashboard')
-            ->with('warning', 'Se modificaron los permisos de administrador del usuario');
-    }
-
-    return redirect()->route('admin-dashboard')
-        ->with('success', 'Usuario actualizado correctamente');
-}
-    // Eliminar usuario
-    public function destroy($id){
+    public function update(Request $request, $id){
         $usuario = User::findOrFail($id);
-        $usuario->delete();
+
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email,'.$id,
+        ]);
+
+        $wasAdmin = $usuario->is_admin;
+        $isNowAdmin = $request->has('is_admin');
+
+        $usuario->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'is_admin' => $isNowAdmin,
+        ]);
+
+        if($wasAdmin != $isNowAdmin){
+            return redirect()->route('admin-dashboard')
+                ->with('warning', 'Se modificaron los permisos de administrador del usuario');
+        }
 
         return redirect()->route('admin-dashboard')
-            ->with('warning', 'Usuario eliminado correctamente');
-    }
+            ->with('success', 'Usuario actualizado correctamente');
+        }
+        // Eliminar usuario
+        public function destroy($id){
+            $usuario = User::findOrFail($id);
+            $usuario->delete();
+
+            return redirect()->route('admin-dashboard')
+                ->with('warning', 'Usuario eliminado correctamente');
+        }
+        
+        public function enviarBienvenida($id){
+        $usuario = User::findOrFail($id);
+        \Mail::to($usuario->email)->send(new \App\Mail\NotificacionMail($usuario));
+
+        return redirect()->route('admin-dashboard')
+            ->with('success', 'Correo de bienvenida enviado a ' . $usuario->name);
+        }
 }
+

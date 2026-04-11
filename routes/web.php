@@ -60,3 +60,8 @@ Route::middleware(['verifica', 'admin'])->group(function () {
 
     Route::resource('usuarios', \App\Http\Controllers\UsuarioController::class);
 });
+
+
+Route::get('/usuarios/{id}/bienvenida', [
+    \App\Http\Controllers\UsuarioController::class, 'enviarBienvenida'
+])->name('usuarios.bienvenida');
