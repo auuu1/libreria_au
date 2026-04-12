@@ -10,7 +10,7 @@
     @extends('layouts.app')
     @section('content')
 
-    <h1>Inicio De Sesion WALL-E</h1>
+    <h1>Inicio de sesión WALL-E</h1>
 
     @include('partials.alerts')
     

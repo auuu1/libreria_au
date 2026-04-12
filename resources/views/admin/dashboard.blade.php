@@ -10,6 +10,11 @@
             Regresar
         </a>
 
+        <a href="{{ route('equipos.index') }}" class="btn btn-primary ms-2 mb-3">
+            <i class="fa-solid fa-fire-extinguisher"></i>
+            Ver Equipos
+        </a>
+
         <form action="{{ route('cerrar') }}" method="POST" class="ms-2">
             @csrf
             <button type="submit" class="btn btn-danger">

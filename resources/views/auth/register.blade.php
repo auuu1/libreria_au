@@ -12,8 +12,9 @@
     @section('content')
 
 
-    <h1>Registro de usuario:</h1>
-    <h2>Bienvenido a WALL-E -> ingresa tus datos</h2>
+    <h1>Bienvenido a WALL-E!</h1>
+    <h3>Registro de usuario:</h3>
+    <h4> Ingresa tus datos</h4>
     @include('partials.alerts')
 
     <form action = "{{route('registro.store') }}" method = "POST">

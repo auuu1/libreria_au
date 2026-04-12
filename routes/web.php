@@ -3,65 +3,63 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MensajeEmergenciaController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\EquipoContraIncendioController;
+use App\Http\Controllers\UsuarioController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+    Route::get('/', function () {
+        return view('welcome');
+    });
 
-//rutas para el formulario de autenticacion
-Route::get('/registro', [
-    AuthController::class,'registerForm'
-])->name('registro');
+    // Rutas para el formulario de autenticación
+    Route::get('/registro', [
+        AuthController::class, 'registerForm'
+    ])->name('registro');
 
-//ruta para ejecutar el formulario
-Route::post('/registro', [
-    AuthController::class, 'register'
-])->name('registro.store');
+    Route::post('/registro', [
+        AuthController::class, 'register'
+    ])->name('registro.store');
 
-Route::get('/acceso',[
-    AuthController::class, 'loginForm'
-])->name('acceso');
+    Route::get('/acceso', [
+        AuthController::class, 'loginForm'
+    ])->name('acceso');
+    Route::post('/acceso', [
+        AuthController::class, 'login'
+    ])->name('acceso.store');
 
-//Ruta para manejar los datos de inicio de sesion
-Route::post('/acceso', [
-    AuthController::class, 'login'
-])->name('acceso.store');
+    // Rutas protegidas (cualquier usuario con sesión activa)
+    Route::middleware(['verifica'])->group(function () {
 
-// rutas protegidas (cualquier usuario con sesion activa)
-Route::middleware(['verifica'])->group(function () {
+        // Ruta para cerrar sesión
+        Route::post('/cerrar', [
+            AuthController::class, 'logout'
+        ])->name('cerrar');
 
-    //Ruta para cerrar sesion
-    Route::post('/cerrar',[
-        AuthController::class,'logout'
-    ])->name('cerrar');
+        // Rutas de Mensaje de Emergencia
+        Route::resource('mensajeEmergencia', MensajeEmergenciaController::class)
+            ->parameters(['mensajeEmergencia' => 'mensajeEmergencia']);
+            
+        // Rutas manuales para actualización de Mensaje de Emergencia
+        Route::get('/mensajeEmergencia/{id}/edit', [
+            MensajeEmergenciaController::class, 'edit'
+        ])->name('mensajeEmergencia.edit');
+        Route::put('/mensajeEmergencia/{id}', [
+            MensajeEmergenciaController::class, 'update'
+        ])->name('mensajeEmergencia.update');
 
-    // rutas de todos los métodos del controlador (index, store, create, destroy, etc.)
-    Route::resource('mensajeEmergencia', MensajeEmergenciaController::class)
-        ->parameters(['mensajeEmergencia' => 'mensajeEmergencia']);
+        // ---> RUTA NUEVA PARA EL CRUD DE EQUIPOS CONTRA INCENDIOS <---
+        Route::resource('equipos', EquipoContraIncendioController::class);
 
-    // ruta para la vista de actualización de un registro
-    Route::get('/mensajeEmergencia/{id}/edit', [
-        MensajeEmergenciaController::class, 'edit'
-    ])->name('mensajeEmergencia.edit');
+    });
 
-    // crear ruta para actualizar el registro
-    Route::put('/mensajeEmergencia/{id}', [
-        MensajeEmergenciaController::class, 'update'
-    ])->name("mensajeEmergencia.update");
+    // Rutas solo para administrador
+    Route::middleware(['verifica', 'admin'])->group(function () {
+        Route::get('/admin-dashboard', [
+            AuthController::class, 'adminDashboard'
+        ])->name('admin-dashboard');
+        Route::resource('usuarios', UsuarioController::class);
+    });
 
-});
-
-
-// rutas solo para administrador
-Route::middleware(['verifica', 'admin'])->group(function () {
-    Route::get('/admin-dashboard',[
-        AuthController::class, 'adminDashboard'
-    ])->name('admin-dashboard');
-
-    Route::resource('usuarios', \App\Http\Controllers\UsuarioController::class);
-});
-
-
-Route::get('/usuarios/{id}/bienvenida', [
-    \App\Http\Controllers\UsuarioController::class, 'enviarBienvenida'
-])->name('usuarios.bienvenida');
+    // Ruta de bienvenida
+    Route::get('/usuarios/{id}/bienvenida', [
+        UsuarioController::class, 'enviarBienvenida'
+    ])->name('usuarios.bienvenida');
