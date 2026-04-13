@@ -1,8 +1,17 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario</title>
+</head>
+<body>
+    @extends('layouts.app')
 
 @section('content')
 <div class="container mt-4">
     <h1 class="mb-4">Inventario de equipos contra incendio</h1>
+    <h4>Usuario en sesion:  {{ auth()->user()->name }}</h4>
 
     <div class="d-flex justify-content-end mb-3">
         <a href="{{ route('equipos.create') }}" class="btn btn-success">
@@ -49,20 +58,41 @@
                                 <a href="{{ route('equipos.edit', $equipo->id) }}" class="btn btn-sm btn-warning">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
-                                
-                                <form action="{{ route('equipos.destroy', $equipo->id) }}" method="POST" class="m-0" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este equipo?');">
+                                @if(auth()->user()->is_admin)
+                                <form action="{{ route('equipos.destroy', $equipo->id) }}" method="POST" class="m-0" onsubmit="
+                                return confirm('¿Estás seguro de que deseas eliminar este equipo?');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger">
                                         <i class="fa-solid fa-trash"></i>
                                     </button>
                                 </form>
+                                 @endif
                             </div>
                         </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
+
+        
     </div>
 </div>
+
+    <div class="d-flex justify-content-between mt-3">
+        <a href="{{ route('inicio') }}" class="btn btn-secondary">
+            <i class="fa-solid fa-arrow-left"></i>
+            Regresar
+        </a>
+
+        <form action="{{ route('cerrar') }}" method="POST">
+            @csrf
+            <button type="submit" class="btn btn-danger">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Cerrar sesión
+            </button>
+        </form>
+    </div>
 @endsection
+</body>
+</html>

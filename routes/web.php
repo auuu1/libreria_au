@@ -28,6 +28,10 @@ use App\Http\Controllers\UsuarioController;
 
     // Rutas protegidas (cualquier usuario con sesión activa)
     Route::middleware(['verifica'])->group(function () {
+        
+        Route::get('/inicio', function () {
+                return view('inicio');
+            })->name('inicio');
 
         // Ruta para cerrar sesión
         Route::post('/cerrar', [

@@ -36,7 +36,7 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        return redirect()->route('mensajeEmergencia.index');
+        return redirect()->route('inicio');
     }
 
 
@@ -66,7 +66,7 @@ class AuthController extends Controller
             \Mail::to($usuario->email)->send(new \App\Mail\InicioSesionMail($usuario));
 
             // Redireccionar al usuario
-            return redirect()->route('mensajeEmergencia.index');
+            return redirect()->route('inicio');
         }
 
         return back()->with('error', 'Correo o contraseña incorrectos');

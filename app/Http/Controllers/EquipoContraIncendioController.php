@@ -36,7 +36,7 @@ class EquipoContraIncendioController extends Controller
             EquipoContraIncendio::create($request->all());
             
             return redirect()->route('equipos.index')
-                             ->with('exito', '¡Equipo contra incendio registrado correctamente!');
+                             ->with('success', '¡Equipo contra incendio registrado correctamente!');
         } catch (\Exception $e) {
             return back()->with('error', 'No se pudo guardar el equipo. Revisa los datos.');
         }
