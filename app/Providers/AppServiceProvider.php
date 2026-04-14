@@ -19,6 +19,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Usamos el modelo Libro que sí aparece en tu carpeta Models
+        
     }
 }

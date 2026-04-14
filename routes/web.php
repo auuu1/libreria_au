@@ -5,7 +5,8 @@ use App\Http\Controllers\MensajeEmergenciaController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EquipoContraIncendioController;
 use App\Http\Controllers\UsuarioController;
-
+use App\Services\GmailService;
+use Illuminate\Http\Request; // ✔️ BIEN
     Route::get('/', function () {
         return view('welcome');
     });
@@ -67,3 +68,28 @@ use App\Http\Controllers\UsuarioController;
     Route::get('/usuarios/{id}/bienvenida', [
         UsuarioController::class, 'enviarBienvenida'
     ])->name('usuarios.bienvenida');
+    Route::get('/gmail/login', function (GmailService $service) {
+    return redirect($service->getAuthUrl());
+});
+
+// 2. Google te regresará aquí y guardará el token eterno
+Route::get('/gmail/callback', function (Request $request, App\Services\GmailService $gmail) {
+
+    try {
+        $token = $gmail->saveToken($request->code);
+
+        dd($token); // 👈 VER qué devuelve Google
+
+    } catch (\Exception $e) {
+        dd($e->getMessage()); // 👈 VER error real
+    }
+
+});
+
+Route::get('/conectar-gmail', function (GmailService $service) {
+    return redirect($service->getAuthUrl());
+});
+Route::get('/test-storage', function () {
+    \Illuminate\Support\Facades\Storage::put('test.txt', 'hola');
+    return "ok";
+});
