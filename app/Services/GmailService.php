@@ -10,7 +10,7 @@ class GmailService {
     protected $client;
 
 public function __construct() {
-    $this->client = new \Google\Client(); // Agrega el \ antes de Google
+    $this->client = new \Google\Client();
     $this->client->setClientId(env('GOOGLE_CLIENT_ID'));
     $this->client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
     $this->client->setRedirectUri(env('GOOGLE_REDIRECT_URI'));
@@ -26,30 +26,30 @@ public function __construct() {
 public function saveToken($code) {
     $token = $this->client->fetchAccessTokenWithAuthCode($code);
 
-    // 🔴 Verifica si Google devolvió error
+
     if (isset($token['error'])) {
         throw new \Exception('Error al obtener token: ' . $token['error']);
     }
 
-    // 🔴 Guarda el token
+
     $guardado = \Illuminate\Support\Facades\Storage::put(
         'gmail_token.json',
         json_encode($token)
     );
 
-    // 🔴 Verifica si realmente se guardó
+    
     if (!$guardado) {
         throw new \Exception('No se pudo guardar el token');
     }
 
-    return $token; // opcional para debug
+    return $token;
 }
 
     public function sendEmail($to, $subject, $body) {
         $token = json_decode(Storage::get('gmail_token.json'), true);
         $this->client->setAccessToken($token);
 
-        // Si el token expiró, lo renovamos sin molestar al usuario
+        // Si el token expiro, lo renovamos sin molestar al usuario
         if ($this->client->isAccessTokenExpired()) {
             $this->client->fetchAccessTokenWithRefreshToken($this->client->getRefreshToken());
             Storage::put('gmail_token.json', json_encode($this->client->getAccessToken()));

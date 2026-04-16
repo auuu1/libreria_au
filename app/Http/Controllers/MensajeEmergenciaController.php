@@ -46,12 +46,12 @@ class MensajeEmergenciaController extends Controller
             // Solo si es correo
             if ($request->medio_envio === 'correo') {
 
-                $correoDestino = "hrzarturo1@gmail.com";
+               $correoDestino = auth()->user()->email;
 
-                $asunto = "🚨 Emergencia: " . $mensaje->tipo_emergencia;
+                $asunto = " Emergencia: " . $mensaje->tipo_emergencia;
 
                 $cuerpo = "
-                    <h2>🚨 Emergencia detectada</h2>
+                    <h2> Emergencia detectada</h2>
                     <p><strong>Servicio:</strong> {$mensaje->servicio_destinatario}</p>
                     <p><strong>Tipo:</strong> {$mensaje->tipo_emergencia}</p>
                     <p><strong>Contenido:</strong> {$mensaje->contenido}</p>
@@ -66,11 +66,10 @@ class MensajeEmergenciaController extends Controller
                         $cuerpo
                     );
 
-                    // Si se envía bien
                     $mensaje->update(['estado_envio' => 'enviado']);
 
                 } catch (\Exception $e) {
-                    // Si falla el envío
+                    
                     $mensaje->update(['estado_envio' => 'fallido']);
                 }
             }
